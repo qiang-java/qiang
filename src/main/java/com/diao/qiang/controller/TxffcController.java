@@ -31,9 +31,6 @@ public class TxffcController {
     public HmjhService hmjhService;
 
     @Autowired
-    public IszjXqService iszjXqService;
-
-    @Autowired
     public ScjhService scjhService;
 
     @Autowired
@@ -43,8 +40,6 @@ public class TxffcController {
     @GetMapping("/insert")
     @ResponseStatus(HttpStatus.OK)
     public void insertTxffc(){
-
-
 
         SimpleDateFormat df = new SimpleDateFormat("YYYY_MMDD");
         String text = HttpUtils.sendGet(Constants.URL,"{}");
@@ -86,8 +81,7 @@ public class TxffcController {
             lotteryNo = dateTime + getNums(minute);
         }
 
-
-        //System.out.println("期号："+lotteryNo+"---- 开奖号：" + lotteryNums);
+        System.out.println("期号："+lotteryNo+"---- 开奖号：" + lotteryNums);
 
         try{
             Txffc txffc = new Txffc();
@@ -120,52 +114,30 @@ public class TxffcController {
         return String.valueOf(second);
     }
 
-    //查询所有计划 判断是否中奖  修改计划的连中连挂
+    // 查询所有计划 判断是否中奖  修改计划的连中连挂
     public void isZj(String lotteryNo,String lotteryNums){
+        System.out.println("期号："+lotteryNo+" ---查询所有计划 修改计划的连中连挂");
         List<Hmjh> hmjhList = hmjhService.getList();
-        IszjXq iszjXq = new IszjXq();
         //循环所有计划
         for (Hmjh hmjh:hmjhList) {
             if(hmjh.getJh().contains(lotteryNums.substring(2))){
-                iszjXq.setIszj("中");
+                hmjh.setDqz(hmjh.getDqz() +1 );
+                hmjh.setDqg(0);
             }else{
-                iszjXq.setIszj("挂");
+                hmjh.setDqg(hmjh.getDqg() + 1 );
+                hmjh.setDqz(0);
             }
+            hmjhService.updateByPrimaryKeySelective(hmjh);
 
-            //添加是否中奖详情
+             Jhzh jhzh = jhzhService.getJhzhList();
+             if(jhzh.getZdlg() < hmjh.getDqg()){
+                 jhzh.setZdlg(hmjh.getDqg());
+             }
+             if(jhzh.getZdlz() < hmjh.getDqz()){
+                 jhzh.setZdlz(hmjh.getDqz());
+             }
 
-            iszjXq.setExpect(lotteryNo);
-
-            iszjXq.setJhid(hmjh.getId());
-
-            if(iszjXqService.insert(iszjXq) > 0){
-                IszjXq zjXq = new IszjXq();
-                zjXq.setJhid(hmjh.getId());
-                zjXq.setExpect(lotteryNo);
-
-                iszjXq = iszjXqService.getListByjhId(zjXq);
-
-               if (iszjXq.getIszj().equals("中")){
-                   hmjh.setDqz(hmjh.getDqz() +1 );
-                   hmjh.setDqg(0);
-               }else if (iszjXq.getIszj().equals("挂"))
-               {
-                   hmjh.setDqg(hmjh.getDqg() + 1 );
-                   hmjh.setDqz(0);
-               }
-               hmjhService.updateByPrimaryKeySelective(hmjh);
-
-                Jhzh jhzh = jhzhService.getJhzhList();
-                if(jhzh.getZdlg() < hmjh.getDqg()){
-                    jhzh.setZdlg(hmjh.getDqg());
-                }
-                if(jhzh.getZdlz() < hmjh.getDqz()){
-                    jhzh.setZdlz(hmjh.getDqz());
-                }
-
-                jhzhService.updateJhzh(jhzh);
-            }
-
+             jhzhService.updateJhzh(jhzh);
         }
     }
 
@@ -176,25 +148,34 @@ public class TxffcController {
     //生成计划  修改计划几期中奖数据
     public void insertScjh(String lotteryNo,String lotteryNums){
         List<Scjh> scjhs = scjhService.getScjhList();
-        if(scjhs.size() > 0 ){
-            for (Scjh jh:scjhs) {
-                if(hmjhService.selectByPrimaryKey(jh.getJhid()).getJh().contains(lotteryNums.substring(2))){
-                    jh.setIszj("中");
-                }
-                jh.setJqzj(jh.getJqzj()+1);
-                scjhService.updateByPrimaryKeySelective(jh);
-            }
-        }
-
         Hmjh hmjh = hmjhService.getListBydqG();
         Scjh scjh = new Scjh();
         scjh.setJhid(hmjh.getId());
         scjh.setJqzj(0);
         scjh.setScqh(lotteryNo);
         scjh.setIszj("等");
-        System.out.println("生成第"+lotteryNo+"期计划："+scjhService.insertSelective(scjh));
 
+        if(scjhs.size() > 0 ){
+            for (Scjh jh:scjhs) {
+                if(hmjhService.selectByPrimaryKey(jh.getJhid()).getJh().contains(lotteryNums.substring(2))){
+                    jh.setIszj("中");
+                    if(scjhService.insertSelective(scjh) > 0 ){
+                        System.out.println("计划第 "+ jh.getJqzj()+1 + "中  生成"+lotteryNo+"的计划");
+                    }
+                }else{
+                    System.out.println("计划进行中（"+ jh.getJqzj()+1 + "） ");
+                }
+                jh.setJqzj(jh.getJqzj()+1);
+                scjhService.updateByPrimaryKeySelective(jh);
+            }
+        }else{
+            if(scjhService.insertSelective(scjh) > 0 ){
+                System.out.println("期号："+lotteryNo+" ---生成计划");
+            }
+        }
         System.out.println("结束：" + new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒").format(new Date()));
+        System.out.println("-----------------------------------------------------------------");
+
     }
 
 

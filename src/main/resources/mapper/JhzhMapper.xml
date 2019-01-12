@@ -14,57 +14,10 @@
   <select id="getJhzhList" resultMap="BaseResultMap" >
     select
     <include refid="Base_Column_List" />
-    from jhzh
+    from jhzh LIMIT 1
   </select>
 
 
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from jhzh
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from jhzh
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.diao.qiang.model.Jhzh" >
-    insert into jhzh (id, zdlg, zdlz, 
-      zjl)
-    values (#{id,jdbcType=INTEGER}, #{zdlg,jdbcType=INTEGER}, #{zdlz,jdbcType=INTEGER}, 
-      #{zjl,jdbcType=DOUBLE})
-  </insert>
-  <insert id="insertSelective" parameterType="com.diao.qiang.model.Jhzh" >
-    insert into jhzh
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="zdlg != null" >
-        zdlg,
-      </if>
-      <if test="zdlz != null" >
-        zdlz,
-      </if>
-      <if test="zjl != null" >
-        zjl,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="zdlg != null" >
-        #{zdlg,jdbcType=INTEGER},
-      </if>
-      <if test="zdlz != null" >
-        #{zdlz,jdbcType=INTEGER},
-      </if>
-      <if test="zjl != null" >
-        #{zjl,jdbcType=DOUBLE},
-      </if>
-    </trim>
-  </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.diao.qiang.model.Jhzh" >
     update jhzh
     <set >
@@ -80,11 +33,5 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.diao.qiang.model.Jhzh" >
-    update jhzh
-    set zdlg = #{zdlg,jdbcType=INTEGER},
-      zdlz = #{zdlz,jdbcType=INTEGER},
-      zjl = #{zjl,jdbcType=DOUBLE}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+
 </mapper>

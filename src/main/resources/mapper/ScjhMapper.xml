@@ -19,22 +19,8 @@
     from scjh where isZj = '等'
   </select>
 
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select
-    <include refid="Base_Column_List" />
-    from scjh
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from scjh
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.diao.qiang.model.Scjh" >
-    insert into scjh (id, jhId, scDate,
-      jqZj, scQh, isZj)
-    values (#{id,jdbcType=INTEGER}, #{jhid,jdbcType=INTEGER}, #{scdate,jdbcType=TIMESTAMP},
-      #{jqzj,jdbcType=INTEGER}, #{scqh,jdbcType=VARCHAR}, #{iszj,jdbcType=VARCHAR})
-  </insert>
+
+
   <insert id="insertSelective" parameterType="com.diao.qiang.model.Scjh" >
     insert into scjh
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -78,6 +64,8 @@
       </if>
     </trim>
   </insert>
+
+
   <update id="updateByPrimaryKeySelective" parameterType="com.diao.qiang.model.Scjh" >
     update scjh
     <set >
@@ -99,13 +87,5 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.diao.qiang.model.Scjh" >
-    update scjh
-    set jhId = #{jhid,jdbcType=INTEGER},
-      scDate = #{scdate,jdbcType=TIMESTAMP},
-      jqZj = #{jqzj,jdbcType=INTEGER},
-      scQh = #{scqh,jdbcType=VARCHAR},
-      isZj = #{iszj,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+
 </mapper>

@@ -7,7 +7,10 @@ import java.util.List;
 
 public interface HmjhService {
     List<Hmjh> getList();
+
     Hmjh getListBydqG();
+
     int updateByPrimaryKeySelective(Hmjh record);
+
     Hmjh selectByPrimaryKey(Integer id);
 }

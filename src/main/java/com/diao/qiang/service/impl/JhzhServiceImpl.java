@@ -12,10 +12,6 @@ public class JhzhServiceImpl implements JhzhService {
     @Autowired
     private JhzhMapper jhzhMapper;
 
-    @Override
-    public int insertJhzh(Jhzh jhzh) {
-        return jhzhMapper.insert(jhzh);
-    }
 
     @Override
     public int updateJhzh(Jhzh jhzh) {
