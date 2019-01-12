@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.diao.qiang.mapper.TxffcMapper" >
+  <resultMap id="BaseResultMap" type="com.diao.qiang.model.Txffc" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="qh" property="qh" jdbcType="VARCHAR" />
+    <result column="kjh" property="kjh" jdbcType="VARCHAR" />
+    <result column="kjDate" property="kjdate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, qh, kjh, kjDate
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from txffc
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectTxffcTop1" resultMap="BaseResultMap" parameterType="com.diao.qiang.model.Txffc" >
+    select
+    <include refid="Base_Column_List" />
+    from txffc
+    where qh = #{qh,jdbcType=VARCHAR}
+  </select>
+
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from txffc
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.diao.qiang.model.Txffc" >
+    insert into txffc ( qh, kjh)
+    values ( #{qh,jdbcType=VARCHAR}, #{kjh,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.diao.qiang.model.Txffc" >
+    insert into txffc
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="qh != null" >
+        qh,
+      </if>
+      <if test="kjh != null" >
+        kjh,
+      </if>
+      <if test="kjdate != null" >
+        kjDate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="qh != null" >
+        #{qh,jdbcType=VARCHAR},
+      </if>
+      <if test="kjh != null" >
+        #{kjh,jdbcType=VARCHAR},
+      </if>
+      <if test="kjdate != null" >
+        #{kjdate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.diao.qiang.model.Txffc" >
+    update txffc
+    <set >
+      <if test="qh != null" >
+        qh = #{qh,jdbcType=VARCHAR},
+      </if>
+      <if test="kjh != null" >
+        kjh = #{kjh,jdbcType=VARCHAR},
+      </if>
+      <if test="kjdate != null" >
+        kjDate = #{kjdate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.diao.qiang.model.Txffc" >
+    update txffc
+    set qh = #{qh,jdbcType=VARCHAR},
+      kjh = #{kjh,jdbcType=VARCHAR},
+      kjDate = #{kjdate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

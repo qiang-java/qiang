@@ -1,0 +1,36 @@
+spring:
+  # tab 必须是空格
+  profiles:
+    active: test
+  datasource:
+    name: zebra
+    url: jdbc:mysql://localhost:3306/sxjh?allowMultiQueries=true&autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT
+    username: root
+    password: root
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+  jackson.serialization.write-dates-as-timestamps: false
+  jackson.time-zone: GMT+8
+template:
+  mandatory: true
+server:
+  port: 8080
+
+#com:
+#  diao:
+#    qiang:
+#      constants:
+#        name: jack

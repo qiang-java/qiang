@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.diao.qiang.mapper.IszjXqMapper" >
+  <resultMap id="BaseResultMap" type="com.diao.qiang.model.IszjXq" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="expect" property="expect" jdbcType="VARCHAR" />
+    <result column="jhId" property="jhid" jdbcType="INTEGER" />
+    <result column="isZj" property="iszj" jdbcType="VARCHAR" />
+    <result column="czDate" property="czdate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, expect, jhId, isZj, czDate
+  </sql>
+
+
+  <select id="getListByjhId" resultMap="BaseResultMap" parameterType="com.diao.qiang.model.IszjXq" >
+    select
+    <include refid="Base_Column_List" />
+    from iszjxq
+    where jhId = #{jhid,jdbcType=INTEGER}   AND  expect =   #{expect,jdbcType=VARCHAR}  LIMIT 1
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from iszjxq
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from iszjxq
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.diao.qiang.model.IszjXq" >
+    insert into iszjxq (expect, jhId,
+      isZj)
+    values ( #{expect,jdbcType=VARCHAR}, #{jhid,jdbcType=INTEGER},
+      #{iszj,jdbcType=VARCHAR})
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="com.diao.qiang.model.IszjXq" >
+    insert into iszjxq
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="expect != null" >
+        expect,
+      </if>
+      <if test="jhid != null" >
+        jhId,
+      </if>
+      <if test="iszj != null" >
+        isZj,
+      </if>
+      <if test="czdate != null" >
+        czDate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="expect != null" >
+        #{expect,jdbcType=VARCHAR},
+      </if>
+      <if test="jhid != null" >
+        #{jhid,jdbcType=INTEGER},
+      </if>
+      <if test="iszj != null" >
+        #{iszj,jdbcType=VARCHAR},
+      </if>
+      <if test="czdate != null" >
+        #{czdate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.diao.qiang.model.IszjXq" >
+    update iszjxq
+    <set >
+      <if test="expect != null" >
+        expect = #{expect,jdbcType=VARCHAR},
+      </if>
+      <if test="jhid != null" >
+        jhId = #{jhid,jdbcType=INTEGER},
+      </if>
+      <if test="iszj != null" >
+        isZj = #{iszj,jdbcType=VARCHAR},
+      </if>
+      <if test="czdate != null" >
+        czDate = #{czdate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.diao.qiang.model.IszjXq" >
+    update iszjxq
+    set expect = #{expect,jdbcType=VARCHAR},
+      jhId = #{jhid,jdbcType=INTEGER},
+      isZj = #{iszj,jdbcType=VARCHAR},
+      czDate = #{czdate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

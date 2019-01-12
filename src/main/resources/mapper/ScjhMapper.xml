@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.diao.qiang.mapper.ScjhMapper" >
+  <resultMap id="BaseResultMap" type="com.diao.qiang.model.Scjh" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="jhId" property="jhid" jdbcType="INTEGER" />
+    <result column="scDate" property="scdate" jdbcType="TIMESTAMP" />
+    <result column="jqZj" property="jqzj" jdbcType="INTEGER" />
+    <result column="scQh" property="scqh" jdbcType="VARCHAR" />
+    <result column="isZj" property="iszj" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, jhId, scDate, jqZj, scQh, isZj
+  </sql>
+
+  <select id="getScjhList" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from scjh where isZj = '等'
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from scjh
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from scjh
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.diao.qiang.model.Scjh" >
+    insert into scjh (id, jhId, scDate,
+      jqZj, scQh, isZj)
+    values (#{id,jdbcType=INTEGER}, #{jhid,jdbcType=INTEGER}, #{scdate,jdbcType=TIMESTAMP},
+      #{jqzj,jdbcType=INTEGER}, #{scqh,jdbcType=VARCHAR}, #{iszj,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.diao.qiang.model.Scjh" >
+    insert into scjh
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="jhid != null" >
+        jhId,
+      </if>
+      <if test="scdate != null" >
+        scDate,
+      </if>
+      <if test="jqzj != null" >
+        jqZj,
+      </if>
+      <if test="scqh != null" >
+        scQh,
+      </if>
+      <if test="iszj != null" >
+        isZj,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="jhid != null" >
+        #{jhid,jdbcType=INTEGER},
+      </if>
+      <if test="scdate != null" >
+        #{scdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="jqzj != null" >
+        #{jqzj,jdbcType=INTEGER},
+      </if>
+      <if test="scqh != null" >
+        #{scqh,jdbcType=VARCHAR},
+      </if>
+      <if test="iszj != null" >
+        #{iszj,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.diao.qiang.model.Scjh" >
+    update scjh
+    <set >
+      <if test="jhid != null" >
+        jhId = #{jhid,jdbcType=INTEGER},
+      </if>
+      <if test="scdate != null" >
+        scDate = #{scdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="jqzj != null" >
+        jqZj = #{jqzj,jdbcType=INTEGER},
+      </if>
+      <if test="scqh != null" >
+        scQh = #{scqh,jdbcType=VARCHAR},
+      </if>
+      <if test="iszj != null" >
+        isZj = #{iszj,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.diao.qiang.model.Scjh" >
+    update scjh
+    set jhId = #{jhid,jdbcType=INTEGER},
+      scDate = #{scdate,jdbcType=TIMESTAMP},
+      jqZj = #{jqzj,jdbcType=INTEGER},
+      scQh = #{scqh,jdbcType=VARCHAR},
+      isZj = #{iszj,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
