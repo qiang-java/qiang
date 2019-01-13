@@ -7,4 +7,6 @@ public interface TxffcService {
     int insert (Txffc record);
 
     Txffc selectTxffcTop1 (Txffc txffc);
+
+    void insertTxffc();
 }

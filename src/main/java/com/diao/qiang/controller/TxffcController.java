@@ -30,8 +30,7 @@ public class TxffcController {
     @Autowired
     public HmjhService hmjhService;
 
-    @Autowired
-    public ScjhService scjhService;
+
 
     @Autowired
     public JhzhService jhzhService;
@@ -41,143 +40,8 @@ public class TxffcController {
     @ResponseStatus(HttpStatus.OK)
     public void insertTxffc(){
 
-        SimpleDateFormat df = new SimpleDateFormat("YYYY_MMDD");
-        String text = HttpUtils.sendGet(Constants.URL,"{}");
-        // 获取开奖号码
-        JSONObject jsonObject = JSONObject.parseObject(text.substring(text.indexOf("(") + 1, text.indexOf(")")));
-        int current = jsonObject.getInteger("c");
-        int[] array = new int[String.valueOf(current).length()];
-        int sum = 0;
-        for (int i = 0; i < array.length; i++) {
-            array[i] = Integer.valueOf(String.valueOf(current).substring(i, i + 1));
-            sum = sum + array[i];
-        }
-
-        int length = array.length;
-        // 最高位数
-        int height = sum - sum / 10 * 10;
-        // 开奖号码
-        String lotteryNums = height + "" + array[length - 4] + "" + array[length - 3] + "" + array[length - 2] + "" + array[length - 1];
-        // 计算期号
-        String lotteryNo = "";
-        String dateTime = df.format(new Date());
-        Calendar calendar = Calendar.getInstance();
-        int minute = calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE);
-        if (calendar.get(Calendar.SECOND) == 0) {
-            return;
-        }
-        /**
-         * 0 - 1440
-         */
-        if (minute < 10) {
-            // 得到指定日期的毫秒数
-            long time = new Date().getTime();
-            // 要加上的天数转换成毫秒数
-            long day = 1*24*60*60*1000;
-            // 相加得到新的毫秒数
-            time+=day;
-            lotteryNo =  new Date(time)+ "1440";
-        } else {
-            lotteryNo = dateTime + getNums(minute);
-        }
-        System.out.println("-----------------------------------------------------------------");
-
-        System.out.println("期号："+lotteryNo+"---- 开奖号：" + lotteryNums);
-
-        try{
-            Txffc txffc = new Txffc();
-            txffc.setQh(lotteryNo);
-            txffc.setKjh(lotteryNums);
-            if(txffcService.selectTxffcTop1(txffc) == null){
-                System.out.println("开始：" + new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒").format(new Date()));
-                txffcService.insert(new Txffc(lotteryNo,lotteryNums));
-                isZj(lotteryNo,lotteryNums);
-
-                insertScjh(lotteryNo,lotteryNums);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
-    //计算期号
-    public String getNums(int second) {
-        if (second < 10) {
-            return "000" + second;
-        }
-        if (second < 100) {
-            return "00" + second;
-        }
-        if (second < 1000) {
-            return "0" + second;
-        }
-        return String.valueOf(second);
-    }
-
-    // 查询所有计划 判断是否中奖  修改计划的连中连挂
-    public void isZj(String lotteryNo,String lotteryNums){
-        System.out.println("期号："+lotteryNo+" ---查询所有计划 修改计划的连中连挂");
-        List<Hmjh> hmjhList = hmjhService.getList();
-        //循环所有计划
-        for (Hmjh hmjh:hmjhList) {
-            if(hmjh.getJh().contains(lotteryNums.substring(2))){
-                hmjh.setDqz(hmjh.getDqz() +1 );
-                hmjh.setDqg(0);
-            }else{
-                hmjh.setDqg(hmjh.getDqg() + 1 );
-                hmjh.setDqz(0);
-            }
-            hmjhService.updateByPrimaryKeySelective(hmjh);
-
-             Jhzh jhzh = jhzhService.getJhzhList();
-             if(jhzh.getZdlg() < hmjh.getDqg()){
-                 jhzh.setZdlg(hmjh.getDqg());
-             }
-             if(jhzh.getZdlz() < hmjh.getDqz()){
-                 jhzh.setZdlz(hmjh.getDqz());
-             }
-
-             jhzhService.updateJhzh(jhzh);
-        }
-    }
-
-
-
-
-
-    //生成计划  修改计划几期中奖数据
-    public void insertScjh(String lotteryNo,String lotteryNums){
-        List<Scjh> scjhs = scjhService.getScjhList();
-        Hmjh hmjh = hmjhService.getListBydqG();
-        Scjh scjh = new Scjh();
-        scjh.setJhid(hmjh.getId());
-        scjh.setJqzj(0);
-        scjh.setScqh(lotteryNo);
-        scjh.setIszj("等");
-
-        if(scjhs.size() > 0 ){
-            for (Scjh jh:scjhs) {
-                if(hmjhService.selectByPrimaryKey(jh.getJhid()).getJh().contains(lotteryNums.substring(2))){
-                    jh.setIszj("中");
-                    if(scjhService.insertSelective(scjh) > 0 ){
-                        System.out.println("计划第"+ jh.getJqzj()+1 + "期中，生成"+lotteryNo+"的计划");
-                    }
-                }else{
-                    System.out.println("计划进行中（"+ jh.getJqzj()+1 + "） ");
-                }
-                jh.setJqzj(jh.getJqzj()+1);
-                scjhService.updateByPrimaryKeySelective(jh);
-            }
-        }else{
-            if(scjhService.insertSelective(scjh) > 0 ){
-                System.out.println("期号："+lotteryNo+" ---生成计划");
-            }
-        }
-        System.out.println("结束：" + new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒").format(new Date()));
-        System.out.println("-----------------------------------------------------------------");
-
-    }
 
 
 }
