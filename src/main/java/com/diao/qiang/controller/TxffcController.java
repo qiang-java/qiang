@@ -80,6 +80,7 @@ public class TxffcController {
         } else {
             lotteryNo = dateTime + getNums(minute);
         }
+        System.out.println("-----------------------------------------------------------------");
 
         System.out.println("期号："+lotteryNo+"---- 开奖号：" + lotteryNums);
 
@@ -160,7 +161,7 @@ public class TxffcController {
                 if(hmjhService.selectByPrimaryKey(jh.getJhid()).getJh().contains(lotteryNums.substring(2))){
                     jh.setIszj("中");
                     if(scjhService.insertSelective(scjh) > 0 ){
-                        System.out.println("计划第 "+ jh.getJqzj()+1 + "中  生成"+lotteryNo+"的计划");
+                        System.out.println("计划第"+ jh.getJqzj()+1 + "期中，生成"+lotteryNo+"的计划");
                     }
                 }else{
                     System.out.println("计划进行中（"+ jh.getJqzj()+1 + "） ");
