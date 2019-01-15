@@ -21,8 +21,8 @@ public class ScheduleTask {
     public TxffcService txffcService;
 
 //    @Scheduled(initialDelay=2000, fixedDelay=30000)
-    // cron表达式
-    @Scheduled(cron = "10/40 * * * * ?")
+    //cron表达式
+    @Scheduled(cron = "10/30 * * * * ?")
     public void insert(){
 
         logger.info("this time :{}", sdf.format(new Date()));

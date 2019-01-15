@@ -178,10 +178,10 @@ public class TxffcServiceImpl implements TxffcService {
                 if(hmjhService.selectByPrimaryKey(jh.getJhid()).getJh().contains(lotteryNums.substring(2))){
                     jh.setIszj("中");
                     if(scjhService.insertSelective(scjh) > 0 ){
-                        System.out.println("计划第"+ jh.getJqzj()+1 + "期中，生成"+lotteryNo+"的计划");
+                        System.out.println("计划第"+ Integer.valueOf(jh.getJqzj())+1 + "期中，生成"+lotteryNo+"的计划");
                     }
                 }else{
-                    System.out.println("计划进行中（"+ jh.getJqzj()+1 + "） ");
+                    System.out.println("计划进行中（"+ Integer.valueOf(jh.getJqzj())+1 + "） ");
                 }
                 jh.setJqzj(jh.getJqzj()+1);
                 scjhService.updateByPrimaryKeySelective(jh);
