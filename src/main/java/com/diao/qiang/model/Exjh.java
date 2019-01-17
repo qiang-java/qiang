@@ -2,7 +2,7 @@ package com.diao.qiang.model;
 import lombok.Data;
 
 @Data
-public class Hmjh {
+public class Exjh {
     private Integer id;
 
     private String jh;

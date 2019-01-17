@@ -3,11 +3,11 @@ package com.diao.qiang.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.diao.qiang.config.Constants;
 import com.diao.qiang.mapper.TxffcMapper;
-import com.diao.qiang.model.Hmjh;
+import com.diao.qiang.model.Exjh;
 import com.diao.qiang.model.Jhzh;
 import com.diao.qiang.model.Scjh;
 import com.diao.qiang.model.Txffc;
-import com.diao.qiang.service.HmjhService;
+import com.diao.qiang.service.ExjhService;
 import com.diao.qiang.service.JhzhService;
 import com.diao.qiang.service.ScjhService;
 import com.diao.qiang.service.TxffcService;
@@ -32,7 +32,7 @@ public class TxffcServiceImpl implements TxffcService {
     private TxffcMapper txffcMapper ;
 
     @Autowired
-    private HmjhService hmjhService;
+    private ExjhService exjhService;
 
     @Autowired
     public ScjhService scjhService;
@@ -135,24 +135,24 @@ public class TxffcServiceImpl implements TxffcService {
     // 查询所有计划 判断是否中奖  修改计划的连中连挂
     public void isZj(String lotteryNo,String lotteryNums){
         System.out.println("期号："+lotteryNo+" ---查询所有计划 修改计划的连中连挂");
-        List<Hmjh> hmjhList = hmjhService.getList();
+        List<Exjh> exjhList = exjhService.getList();
         //循环所有计划
-        for (Hmjh hmjh:hmjhList) {
-            if(hmjh.getJh().contains(lotteryNums.substring(2))){
-                hmjh.setDqz(hmjh.getDqz() +1 );
-                hmjh.setDqg(0);
+        for (Exjh exjh : exjhList) {
+            if(exjh.getJh().contains(lotteryNums.substring(3))){
+                exjh.setDqz(exjh.getDqz() +1 );
+                exjh.setDqg(0);
             }else{
-                hmjh.setDqg(hmjh.getDqg() + 1 );
-                hmjh.setDqz(0);
+                exjh.setDqg(exjh.getDqg() + 1 );
+                exjh.setDqz(0);
             }
-            hmjhService.updateByPrimaryKeySelective(hmjh);
+            exjhService.updateByPrimaryKeySelective(exjh);
 
             Jhzh jhzh = jhzhService.getJhzhList();
-            if(jhzh.getZdlg() < hmjh.getDqg()){
-                jhzh.setZdlg(hmjh.getDqg());
+            if(jhzh.getZdlg() < exjh.getDqg()){
+                jhzh.setZdlg(exjh.getDqg());
             }
-            if(jhzh.getZdlz() < hmjh.getDqz()){
-                jhzh.setZdlz(hmjh.getDqz());
+            if(jhzh.getZdlz() < exjh.getDqz()){
+                jhzh.setZdlz(exjh.getDqz());
             }
 
             jhzhService.updateJhzh(jhzh);
@@ -166,16 +166,16 @@ public class TxffcServiceImpl implements TxffcService {
     //生成计划  修改计划几期中奖数据
     public void insertScjh(String lotteryNo,String lotteryNums){
         List<Scjh> scjhs = scjhService.getScjhList();
-        Hmjh hmjh = hmjhService.getListBydqG();
+        Exjh exjh = exjhService.getListBydqG();
         Scjh scjh = new Scjh();
-        scjh.setJhid(hmjh.getId());
+        scjh.setJhid(exjh.getId());
         scjh.setJqzj(0);
         scjh.setScqh(lotteryNo);
         scjh.setIszj("等");
 
         if(scjhs.size() > 0 ){
             for (Scjh jh:scjhs) {
-                if(hmjhService.selectByPrimaryKey(jh.getJhid()).getJh().contains(lotteryNums.substring(2))){
+                if(exjhService.selectByPrimaryKey(jh.getJhid()).getJh().contains(lotteryNums.substring(3))){
                     jh.setIszj("中");
                     if(scjhService.insertSelective(scjh) > 0 ){
                         System.out.println("计划第"+ Integer.valueOf(jh.getJqzj())+1 + "期中，生成"+lotteryNo+"的计划");
