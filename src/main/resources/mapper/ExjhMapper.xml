@@ -23,7 +23,7 @@
   <select id="getListBydqG" resultMap="BaseResultMap" >
     select
     <include refid="Base_Column_List" />
-    from exjh  ORDER BY dqG DESC LIMIT 1
+   FROM `qzwltxffc`.`exjh`  WHERE  dqG IN (SELECT MAX(dqG) FROM `qzwltxffc`.`exjh` )   ORDER BY RAND() LIMIT 1
   </select>
 
 
